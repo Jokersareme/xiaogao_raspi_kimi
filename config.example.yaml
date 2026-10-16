@@ -1,0 +1,73 @@
+# 小高语音助手 · 配置模板
+# 复制为 config.yaml 后使用；config.yaml 已加入 .gitignore，key 只写在那里。
+
+assistant:
+  name: 小高
+  tts_enabled: true        # test_cli 可用 --no-tts 关闭
+  log_dir: logs
+
+wakeup:
+  mode: button             # button = GPIO 按住说话；wakeword = snowboy 唤醒词「小高」（需麦克风）
+  gpio_button: 17          # BCM 编号，内部上拉，按下接 GND；wakeword 模式下兼作打断/结束录音
+  max_record_seconds: 10   # 单次最长录音
+  # --- 仅 wakeword 模式 ---
+  sensitivity: 0.5         # 灵敏度 0~1，越大越灵敏（误唤醒也越多）
+  audio_gain: 1            # 输入增益，麦克风声音小可加大
+  # model: vendor/snowboy/Xiaogao.pmdl   # 默认内置，换模型时改这里
+
+stt:
+  provider: openai_compat  # openai_compat = OpenAI 兼容 /audio/transcriptions；baidu = 百度语音识别
+  # OpenAI 兼容转写接口（/audio/transcriptions）
+  base_url: ""             # 例：https://api.deepseek.com/v1 或你的中转地址
+  api_key: ""              # 留空 = 语音输入路不可用（文本路不受影响）
+  model: whisper-1
+  lang: zh
+  timeout: 20
+  # 百度语音识别（provider: baidu 时必填，wav 需 16000Hz）
+  baidu:
+    app_id: ""
+    api_key: ""
+    secret_key: ""
+    dev_pid: 1537          # 1537=普通话(含简单英文)，1737=英语
+
+tts:
+  provider: edge           # edge = edge-tts；espeak = 本地兜底
+  voice: zh-CN-XiaoxiaoNeural
+  rate: "+0%"
+  volume: "+0%"
+  fallback: espeak         # edge 失败自动降级
+  device: ""               # 播放设备，如 plughw:0,0；留空用系统默认
+
+llm:
+  provider: openai_compat  # openai_compat = DeepSeek 等兼容接口；hunyuan = 腾讯元器智能体
+  base_url: https://api.deepseek.com/v1
+  api_key: ""              # ← 填这里后日常对话才可用
+  model: deepseek-chat
+  timeout: 25
+  temperature: 0.7
+  max_history: 6           # 多轮上下文保留轮数
+  # 腾讯元器（provider: hunyuan 时必填；token 即智能体 openapi 的 Bearer token）
+  hunyuan:
+    token: ""
+    assistant_id: ""
+    user_id: xiaogao-raspi
+
+smart_home:
+  mqtt_host: localhost
+  mqtt_port: 1883
+  username: ""
+  password: ""
+  base_topic: home/ac      # hub 的 base_topic
+  room: bedroom
+  codes_file: /home/gsv/WORK/smart_home/home-hub/codes/bedroom_ac.json
+  state_timeout: 6         # 等 hub 回执的秒数
+
+reminder:
+  store_file: reminders.json
+  max: 20
+
+weather:
+  enabled: true
+  provider: open-meteo     # 免 key
+  latitude: 31.2304        # 上海默认，改成你所在城市
+  longitude: 121.4737

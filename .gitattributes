@@ -1,0 +1,2 @@
+# 部署目标是树莓派 Linux，统一 LF，避免 setup.sh 等脚本 CRLF 导致无法执行
+* text=auto eol=lf

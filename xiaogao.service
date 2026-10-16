@@ -1,0 +1,17 @@
+[Unit]
+Description=XiaoGao Voice Assistant
+After=network-online.target mosquitto.service pigpiod.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gsv
+Group=gsv
+WorkingDirectory=/home/gsv/WORK/xiaogao
+ExecStart=/home/gsv/WORK/xiaogao/venv/bin/python -u xiaogao.py
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

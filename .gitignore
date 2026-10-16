@@ -1,0 +1,10 @@
+config.yaml
+logs/
+venv/
+__pycache__/
+*.pyc
+reminders.json
+*.wav
+*.mp3
+!tests/record_sample.wav
+!vendor/snowboy/resources/*.wav
